@@ -5,6 +5,7 @@ import { tickAction } from './actions';
 import { CaseReducerActions } from '@reduxjs/toolkit';
 import undoable from 'redux-undo';
 //import {setAutoFreeze } from 'immer';
+import {original} from 'immer';
 //setAutoFreeze(false);
 
 // const boardSelector = (state : any) => state;
@@ -14,13 +15,13 @@ import undoable from 'redux-undo';
 // const numberOfLiveCellsSelector = createSelector(boardSelector, board => board.cells);
 
 
-
 //********** HERE:  Uncomment between these two versions: 
 // createReducer
 export const boardSimulator = createReducer(initialBoardState(), builder => {
   builder
     .addCase(tickAction, (state, action) => {
-      return tickImmer(state);      
+      //return tickImmer(state);      
+      return tick(original(state)!);      
     })
     .addDefaultCase((state, action) => {
     });
@@ -83,7 +84,8 @@ function tick(state: ReturnType<typeof initialBoardState>) {
 
   }
   return {
-    gridSize,
+    ...state,
+    gridSize: {...state.gridSize},
     cells: newCells,
     generation: state.generation + 1
   };
@@ -100,7 +102,7 @@ function tickImmer(state: ReturnType<typeof initialBoardState>) {
   const newCells : Array<Array<LifeStatus>> = new Array<Array<LifeStatus>>(gridSize.x);
 
   const cells = state.cells;
-  let board = "";
+
   for (let x = 0; x < cells.length; x++) {
     newCells[x] = new Array<LifeStatus>(gridSize.y);
     for (let y = 0; y < cells[x].length; y++) {
@@ -131,9 +133,6 @@ function tickImmer(state: ReturnType<typeof initialBoardState>) {
       else {
         newCells[x][y] = numberOfAliveNeigbors === 3 ? LifeStatus.ALIVE : LifeStatus.EMTPY;
       }
-      if (state.generation <= 2)
-        //board += cells[x][y] === LifeStatus.ALIVE ? 'X' : 'O';
-        board += numberOfAliveNeigbors;
     }
   }
 
