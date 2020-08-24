@@ -4,52 +4,33 @@ import { createReducer, AnyAction, createSelector } from '@reduxjs/toolkit';
 import { tickAction } from './actions';
 import { CaseReducerActions } from '@reduxjs/toolkit';
 import undoable from 'redux-undo';
-import {setAutoFreeze } from 'immer';
+//import {setAutoFreeze } from 'immer';
+//setAutoFreeze(false);
 
-setAutoFreeze(false);
 // const boardSelector = (state : any) => state;
 
 // const cellsSelector = createSelector(boardSelector, board => board.cells);
 
 // const numberOfLiveCellsSelector = createSelector(boardSelector, board => board.cells);
 
-// //Faster createReducer
-// export const boardSimulator = createReducer(initialBoardState(), builder => {
-//   builder
-//     .addCase(tickAction, (state, action) => {
-//       //return tick(state);
-//       return tickFaster(state);
-//     })
-//     .addDefaultCase((state, action) => {
-//     });
-// });
-
-// //Faster standard
-// export const boardSimulator = (state = initialBoardState(), action : AnyAction) => {
-//   if (tickAction.match(action)) {
-//     return tickFaster(state);
-//   }
-//   else {
-//     return state;
-//   }
-// };
 
 
-//tick createReducer
+//********** HERE:  Uncomment between these two versions: 
+// createReducer
 export const boardSimulator = createReducer(initialBoardState(), builder => {
   builder
     .addCase(tickAction, (state, action) => {
       return tickImmer(state);      
-      //return tick(state);      
     })
     .addDefaultCase((state, action) => {
     });
 });
 
-// //tick standard
+// // standard Reducer
 // export const boardSimulator = (state = initialBoardState(), action : AnyAction) => {
 //   if (tickAction.match(action)) {
 //     return tick(state);
+//     //return tickFaster(state);
 //   }
 //   else {
 //     return state;
@@ -98,16 +79,9 @@ function tick(state: ReturnType<typeof initialBoardState>) {
       else {
         newCells[x][y] = numberOfAliveNeigbors === 3 ? LifeStatus.ALIVE : LifeStatus.EMTPY;
       }
-      if (state.generation <= 2)
-        //board += cells[x][y] === LifeStatus.ALIVE ? 'X' : 'O';
-        board += numberOfAliveNeigbors;
     }
 
-    // if (state.generation <= 2)
-    //   board += "\n";
   }
-  // if (state.generation <= 2)
-  //   console.log(board);
   return {
     gridSize,
     cells: newCells,
@@ -161,12 +135,8 @@ function tickImmer(state: ReturnType<typeof initialBoardState>) {
         //board += cells[x][y] === LifeStatus.ALIVE ? 'X' : 'O';
         board += numberOfAliveNeigbors;
     }
-
-    // if (state.generation <= 2)
-    //   board += "\n";
   }
-  // if (state.generation <= 2)
-  //   console.log(board);
+
   state.cells = newCells;
   state.generation += 1;  
 }

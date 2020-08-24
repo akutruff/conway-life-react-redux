@@ -24,21 +24,6 @@ class App extends React.Component<PropsFromRedux> {
 
   constructor(props: PropsFromRedux) {
     super(props);
-
-    // const gridSize = { x: 100, y: 100 };
-    // const cells = Array.apply(null, Array<Array<LifeStatus>>(gridSize.x)).map(() => new Array<LifeStatus>(gridSize.y).fill(LifeStatus.EMTPY));
-
-    // cells[10][10] = LifeStatus.ALIVE;
-    // cells[11][10] = LifeStatus.ALIVE;
-    // cells[9][11] = LifeStatus.ALIVE;
-    // cells[10][11] = LifeStatus.ALIVE;
-    // cells[10][12] = LifeStatus.ALIVE;
-
-    // this.state = {
-    //   generation: 0,
-    //   gridSize: gridSize,
-    //   cells,
-    // };
   }
 
   render() {
